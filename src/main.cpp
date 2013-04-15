@@ -5,6 +5,7 @@
  *      Author: ivo
  */
 
+#include"automata.h"
 #include<stdio.h>
 
 int main() {
