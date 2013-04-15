@@ -7,6 +7,7 @@
 
 #include"tests.h"
 #include"automata.h"
+#include"stdio.h"
 
 void test_table_expansion();
 void test_entry_expansion();
@@ -18,12 +19,12 @@ void run_tests() {
 
 void test_table_expansion() {
 	automaton a;
-	expand_states(a);
 	expand_table(a);
-	printf("States size: %d", a.states_size);
-	printf("Table size: %d", a.table_size);
+	printf("Table size: %d\n", a.table_size);
 }
 
 void test_entry_expansion() {
-
+	automaton a;
+	expand_states(a);
+	printf("States size: %d\n", a.states_size);
 }

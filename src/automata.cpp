@@ -55,6 +55,7 @@ void expand_table(automaton& a) {
 	for (int i = 0; i < old_size; i++) {
 		a.table[i] = old_table[i];
 	}
+	a.table_size = to_size;
 	if(old_table != 0)
 		delete old_table;
 }
@@ -73,6 +74,7 @@ void expand_states(automaton& a) {
 	for (int i = 0; i < old_size; i++) {
 		a.states[i] = old_states[i];
 	}
+	a.states_size = to_size;
 	if(old_states != 0)
 		delete old_states;
 }
@@ -86,11 +88,10 @@ state& new_state(automaton& a, transition* tr, int tr_size) {
 		expand_states(a);
 	}
 	a.last_state++;
-	state s = a.states[a.last_state];
 	sort_transitions(tr, tr_size);
-	s.first_ch = tr[0].ch;
+	a.states[a.last_state].first_ch = tr[0].ch;
 	int pos = first_admisable_position((entry*) a.table, a.table_size, tr,
 			tr_size);
 	insert_transitions(pos, (entry*) a.table, a.table_size, tr, tr_size);
-	return s;
+	return a.states[a.last_state];
 }

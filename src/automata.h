@@ -39,7 +39,7 @@ struct state {
  * Represents an automaton.
  */
 struct automaton {
-	tarjantable* table = 0;
+	tarjantable table = 0;
 	int table_size = 0;
 	int last_state = -1;
 	state* states = 0;
@@ -73,7 +73,7 @@ void insert_transitions(int pos, tarjantable table, int table_size, transition* 
  * @param tr
  * @param tr_size
  */
-state new_state(automaton& a, transition* tr, int tr_size);
+state& new_state(automaton& a, transition* tr, int tr_size);
 
 /*!
  * Returns true if there is a transition with the given character from the specified state in the automaton.
