@@ -24,7 +24,11 @@ struct transition {
 struct state {
 	int start;
 	int first_ch;
-	bool isFinal;
+	int isFinal;
 };
+
+typedef entry* tarjantable ;
+
+int first_admisable_position(entry* table, int table_size, transition* transitions, int transitions_size);
 
 #endif /* AUTOMATA_H_ */
