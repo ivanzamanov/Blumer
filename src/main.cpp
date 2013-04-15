@@ -6,9 +6,10 @@
  */
 
 #include"automata.h"
+#include"tests.h"
 #include<stdio.h>
 
 int main() {
-	printf("Hello, world!");
-	return 0;
+	run_tests();
 }
+
