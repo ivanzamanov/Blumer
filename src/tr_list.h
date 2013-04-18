@@ -31,13 +31,14 @@ public:
 	void add(transition& el);
 	transition& get(int i);
 	void remove(int i);
+	int size();
 
 private:
 	void copyFrom(TransitionsList& l);
 	void deleteList();
-	node* head = 0;
-	node* tail = 0;
-	int size = 0;
+	transition** store = 0;
+	int n = 0;
+	int last = -1;
 };
 
 #endif /* LIST_H_ */

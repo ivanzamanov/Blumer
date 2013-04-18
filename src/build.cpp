@@ -17,8 +17,8 @@ struct temp_automaton {
 };
 
 void concat(automaton& a, char* regex);
-void star(automaton& a);
-void logical_or(automaton& a);
+//void star(automaton& a);
+//void logical_or(automaton& a);
 
 /*!
  * 	Basic idea is the following - first build it as a simple graph

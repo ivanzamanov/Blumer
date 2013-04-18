@@ -7,8 +7,8 @@
 
 #include"tr_list.h"
 
-node* createNode(transition& tr);
 bool is_lesser(transition& t1, transition& t2);
+int newSize(int& current);
 
 TransitionsList::TransitionsList() {
 
@@ -26,73 +26,87 @@ TransitionsList& TransitionsList::operator=(TransitionsList& l) {
 
 TransitionsList::~TransitionsList() {
 	deleteList();
+	last = -1;
+	n = 0;
 }
 
 void TransitionsList::copyFrom(TransitionsList& l) {
-	if (l.size <= 0)
-		return;
-
-	this->size = l.size;
-	node* h2 = l.head;
-	this->head = createNode(*(head->data));
-	node* last_node = this->head;
-	for (int i = 1; i < l.size; i++) {
-		h2 = h2->next;
-		node* new_node = createNode(*(h2->data));
-		new_node->prev = last_node;
-		last_node->next = new_node;
-		last_node = new_node;
+	n = l.n;
+	store = new transition*[n];
+	for (last=0; last<=l.last; last++) {
+		store[last] = l.store[last];
 	}
 }
 
 void TransitionsList::deleteList() {
-	while (this->head != 0) {
-		node* next = this->head->next;
-		delete this->head;
-		this->head = next;
+	for (int i=0; i<=last; i++) {
+		delete store[i];
 	}
+	delete[] store;
 }
 
 void TransitionsList::add(transition& el) {
-	if (head == 0) {
-		head = createNode(el);
-	} else {
-		node* after = head;
-		while(after != 0 && is_lesser(el, *after->data)) {
-
+	if(last == n - 1 || n == 0) {
+		n = newSize(n);
+		transition** newStore = new transition*[n];
+		for (int i=0; i<=last; i++) {
+			newStore[i] = store[i];
 		}
+		delete[] store;
+		store = newStore;
+	}
+	int i;
+	// Find the index, at which the new element should be inserted.
+	// Sort should be in ascending order by the integer value of the char.
+	for (i=0; i<=last; i++) {
+		if(!is_lesser(get(i), el)) {
+			break;
+		}
+	}
+	// Shift all greater elements to the right.
+	for (int k=last; k>=i; k--) {
+		store[k+1] = store[k];
+	}
+	store[i] = new transition(el);
+	// An element was added.
+	last++;
+	for (int i=0; i<last; i++) {
+		if (store[i] == store[i+1])
+			break;
 	}
 }
 
-/*!
- * TODO: Refactor so this won't be O(n) every time.
- */
 transition& TransitionsList::get(int i) {
-	if (i >= size) {
-		throw 1;
-	} else if (i == size - 1) {
-		return *(tail->data);
-	} else {
-		node* current = this->head;
-		for (int k = 1; k < i; k++) {
-			current = current->next;
-		}
-		return *(current->data);
+	if(i >= n) {
+		throw 2;
 	}
+	return *store[i];
 }
 
-node* createNode(transition& tr) {
-	node* result = new node;
-	result->data = &tr;
-	return result;
+void TransitionsList::remove(int i) {
+	delete store[i];
+	for (int k=i; k<last; k++) {
+		store[k] = store[k+1];
+	}
+	last--;
+}
+
+int TransitionsList::size() {
+	return last+1;
 }
 
 bool is_lesser(transition& t1, transition& t2) {
-	if(t1.ch < t2.ch) {
+	if (t1.ch < t2.ch) {
 		return true;
 	} else if (t1.ch > t2.ch) {
 		return false;
 	} else {
 		return t1.dest < t2.dest;
 	}
+}
+
+int newSize(int& current) {
+	if(current <= 0)
+		return 5;
+	return current * 2;
 }

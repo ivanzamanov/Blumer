@@ -40,4 +40,25 @@ void test_automaton_eval() {
 
 void test_list() {
 	TransitionsList list;
+	int N = 50;
+	for (int i = 0; i < N; i++) {
+		transition tr;
+		tr.ch = N - i;
+		list.add(tr);
+	}
+	for (int i = 0; i < N; i++) {
+		transition tr;
+		tr.ch = N + i;
+		list.add(tr);
+	}
+	for (int i = 0; i < list.size() - 1; i++) {
+		if (list.get(i).ch > list.get(i + 1).ch)
+			printf("Incorrect ordering\n");
+	}
+	for (int i = 0; i < N/2; i++) {
+		list.remove(i);
+	}
+	for (int i = 0; i < list.size(); i++) {
+		printf("%d ", (int) list.get(i).ch);
+	}
 }
