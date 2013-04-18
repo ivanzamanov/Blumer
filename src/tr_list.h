@@ -32,7 +32,8 @@ public:
 	transition& get(int i);
 	void remove(int i);
 	int size();
-	int lookup(char c);
+	int lookupChar(char c);
+	int lookupState(int s);
 
 private:
 	void copyFrom(const TransitionsList& l);

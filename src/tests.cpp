@@ -48,7 +48,7 @@ void test_list() {
 	}
 	for (int i = 0; i < N; i++) {
 		transition tr;
-		tr.ch = N + i;
+		tr.ch = N + i + 1;
 		list.add(tr);
 	}
 	for (int i = 0; i < list.size() - 1; i++) {
@@ -57,5 +57,12 @@ void test_list() {
 	}
 	for (int i = 0; i < N/2; i++) {
 		list.remove(i);
+	}
+	for (int i = 0; i<list.size(); i++) {
+		transition& tr = list.get(i);
+		if(list.lookupChar(tr.ch) != i) {
+			printf("Search is wrong - i=%d, ch=%d\n", i, (int)tr.ch);
+			break;
+		}
 	}
 }
