@@ -24,17 +24,18 @@ struct node {
 class TransitionsList {
 public:
 	TransitionsList();
-	TransitionsList(TransitionsList& l);
+	TransitionsList(const TransitionsList& l);
 	~TransitionsList();
-	TransitionsList& operator=(TransitionsList& l);
+	const TransitionsList& operator=(const TransitionsList& l);
 
-	void add(transition& el);
+	void add(const transition& el);
 	transition& get(int i);
 	void remove(int i);
 	int size();
+	int lookup(char c);
 
 private:
-	void copyFrom(TransitionsList& l);
+	void copyFrom(const TransitionsList& l);
 	void deleteList();
 	transition** store = 0;
 	int n = 0;

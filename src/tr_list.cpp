@@ -7,18 +7,18 @@
 
 #include"tr_list.h"
 
-bool is_lesser(transition& t1, transition& t2);
+bool is_lesser(const transition& t1,const  transition& t2);
 int newSize(int& current);
 
 TransitionsList::TransitionsList() {
 
 }
 
-TransitionsList::TransitionsList(TransitionsList& l) {
+TransitionsList::TransitionsList(const TransitionsList& l) {
 	copyFrom(l);
 }
 
-TransitionsList& TransitionsList::operator=(TransitionsList& l) {
+const TransitionsList& TransitionsList::operator=(const TransitionsList& l) {
 	deleteList();
 	copyFrom(l);
 	return *this;
@@ -30,7 +30,7 @@ TransitionsList::~TransitionsList() {
 	n = 0;
 }
 
-void TransitionsList::copyFrom(TransitionsList& l) {
+void TransitionsList::copyFrom(const TransitionsList& l) {
 	n = l.n;
 	store = new transition*[n];
 	for (last=0; last<=l.last; last++) {
@@ -45,7 +45,7 @@ void TransitionsList::deleteList() {
 	delete[] store;
 }
 
-void TransitionsList::add(transition& el) {
+void TransitionsList::add(const transition& el) {
 	if(last == n - 1 || n == 0) {
 		n = newSize(n);
 		transition** newStore = new transition*[n];
@@ -70,10 +70,6 @@ void TransitionsList::add(transition& el) {
 	store[i] = new transition(el);
 	// An element was added.
 	last++;
-	for (int i=0; i<last; i++) {
-		if (store[i] == store[i+1])
-			break;
-	}
 }
 
 transition& TransitionsList::get(int i) {
@@ -95,7 +91,7 @@ int TransitionsList::size() {
 	return last+1;
 }
 
-bool is_lesser(transition& t1, transition& t2) {
+bool is_lesser(const transition& t1,const  transition& t2) {
 	if (t1.ch < t2.ch) {
 		return true;
 	} else if (t1.ch > t2.ch) {
@@ -109,4 +105,12 @@ int newSize(int& current) {
 	if(current <= 0)
 		return 5;
 	return current * 2;
+}
+
+int TransitionsList::lookup(char c) {
+	for(int i=0; i<size(); i++) {
+		if(get(i).ch == c)
+			return i;
+	}
+	return -1;
 }

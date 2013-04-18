@@ -58,7 +58,4 @@ void test_list() {
 	for (int i = 0; i < N/2; i++) {
 		list.remove(i);
 	}
-	for (int i = 0; i < list.size(); i++) {
-		printf("%d ", (int) list.get(i).ch);
-	}
 }
