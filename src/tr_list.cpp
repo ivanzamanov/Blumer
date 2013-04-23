@@ -6,9 +6,9 @@
  */
 
 #include"tr_list.h"
+#include"utils.h"
 
 bool is_lesser(const transition& t1, const transition& t2);
-int newSize(int& current);
 
 TransitionsList::TransitionsList() {
 
@@ -47,7 +47,7 @@ void TransitionsList::deleteList() {
 
 void TransitionsList::add(const transition& el) {
 	if (last == n - 1 || n == 0) {
-		n = newSize(n);
+		n = newListSize(n);
 		transition** newStore = new transition*[n];
 		for (int i = 0; i <= last; i++) {
 			newStore[i] = store[i];
@@ -74,7 +74,7 @@ void TransitionsList::add(const transition& el) {
 
 transition& TransitionsList::get(int i) {
 	if (i >= n) {
-		throw 2;
+		throw "Range check failed, requested index is greater that size";
 	}
 	return *store[i];
 }
@@ -101,13 +101,6 @@ bool is_lesser(const transition& t1, const transition& t2) {
 	}
 }
 
-int newSize(int& current) {
-	if (current <= 0)
-		return 5;
-	return current * 2;
-}
-
-// TODO: we're sorted by char, lookup using binary search...
 int TransitionsList::lookupChar(char c) {
 	int n = size();
 	if(c == 50)

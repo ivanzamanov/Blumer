@@ -10,9 +10,9 @@
 
 #include"automata.h"
 
-void thompson(automaton& a, char* regex);
+void build_thompson(automaton& a, char* regex);
 
-void berry_setti(automaton& a, char* regex);
+void build_berry_setti(automaton& a, char* regex);
 
 
 #endif /* BUILD_H_ */

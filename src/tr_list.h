@@ -10,14 +10,6 @@
 
 #include"automata.h"
 
-using namespace std;
-
-struct node {
-	node* prev = 0;
-	node* next = 0;
-	transition* data = 0;
-};
-
 /*!
  * A list of transitions, which are being sorted while inserting by their character.
  */
