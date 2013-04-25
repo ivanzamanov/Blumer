@@ -73,10 +73,39 @@ void test_list() {
 	}
 }
 
+/*
+ * Idea for implementing parsing:
+ * Stack of lists of automatons.
+ * For every character in the regex:
+ * - if char == (, then push in another list
+ * - if char == ), then pop a list, create union
+ * of all automatons in the popped list, char++,
+ * add the resulting automaton to the list at the head
+ * - if char == |, then add a new automaton to the list
+ * - otherwise, concatenate char to the last automaton
+ * in the current list
+ *
+ * Time: O(strlen(regex)), which should be minimal.
+ */
 void test_bs_build() {
 	char* regex = (char*)"(reg)*";
-	automaton a;
-	build_berry_setti(a, regex);
+//	automaton a;
+//	build_berry_setti(a, regex);
+
+	Stack<automaton> s;
+	int i=0;
+	while(regex[i] != 0) {
+		if(regex[i] == '(') {
+			automaton a;
+			s.push(a);
+		} else if (regex[i] == ')') {
+			i++; // Because of the *
+			automaton a;
+			s.pop(a);
+		} else {
+			// Concatenate regex[i] to s.peek(a).
+		}
+	}
 }
 
 void test_stack() {
