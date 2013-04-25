@@ -10,8 +10,8 @@
 
 template<class T>
 struct stack_node {
-	T* data;
-	stack_node* prev;
+	T* data = 0;
+	stack_node* prev = 0;
 };
 
 template<class T>

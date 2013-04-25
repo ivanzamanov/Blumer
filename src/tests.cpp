@@ -6,6 +6,7 @@
  */
 
 #include"stack.h"
+#include"queue.h"
 #include"tests.h"
 #include"automata.h"
 #include"stdio.h"
@@ -18,6 +19,7 @@ void test_automaton_eval();
 void test_list();
 void test_bs_build();
 void test_stack();
+void test_queue();
 
 void run_tests() {
 	test_entry_expansion();
@@ -26,6 +28,7 @@ void run_tests() {
 	test_list();
 	test_bs_build();
 	test_stack();
+	test_queue();
 }
 
 void test_table_expansion() {
@@ -105,11 +108,23 @@ void test_bs_build() {
 		} else {
 			// Concatenate regex[i] to s.peek(a).
 		}
+		i++;
 	}
 }
 
 void test_stack() {
 	Stack<int> s;
+	for (int i=0; i<10; i++) {
+		s.push(i);
+	}
+	while(!s.isEmpty()) {
+		int i;
+		s.pop(i);
+	}
+}
+
+void test_queue() {
+	Queue<int> s;
 	for (int i=0; i<10; i++) {
 		s.push(i);
 	}
