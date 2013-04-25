@@ -9,6 +9,8 @@
 #include"automata.h"
 #include"states_list.h"
 #include"utils.h"
+
+#include<stdio.h>
 #include<string.h>
 
 struct temp_automaton {
@@ -45,6 +47,7 @@ void build_bs_helper(temp_automaton& a, char* regex) {
 		return;
 	}
 	int len = strlen(regex);
+	printf("Regex: %s  ---  ", regex);
 	if (len == 0) {
 		state only_state;
 		only_state.first_ch = 0;
@@ -58,11 +61,11 @@ void build_bs_helper(temp_automaton& a, char* regex) {
 	} else if (len >= 3 && regex[0] == '('
 						&& regex[len - 1] == '*'
 						&& regex[len - 2] == ')') {
-		int sublen = len - 3;
+		int sublen = len - 2;
 		char* sub = substring(regex, 1, sublen);
-		strncpy(sub, regex, sublen);
 		build_bs_helper(a, sub);
 		delete sub;
+		printf("Star of %s\n", regex);
 		star(a);
 	} else {
 		int index;
@@ -72,23 +75,32 @@ void build_bs_helper(temp_automaton& a, char* regex) {
 		}
 		if (index == len) {
 			char* sub = substring(regex, 1, len);
+			char* ch = substring(regex, 0, 1);
+			concat(a, ch);
+			delete ch;
 			concat(a, sub);
 			delete sub;
-			build_bs_helper(a, regex + 1);
 		} else {
-			// TODO: logical "or" on both sides of the |
+//			char* regex1 = substring(regex, 0, index);
+//			char* regex2 = substring(regex, index+1, len);
+//			temp_automaton a1, a2;
+//			build_bs_helper(a1, regex1);
+//			build_bs_helper(a2, regex2);
+
 		}
 	}
 }
 
 void concat(temp_automaton& pre, char* regex) {
-	automaton post;
-	build_berry_setti(post, regex);
+	temp_automaton post;
+	printf("Concat: %s\n", regex);
+	build_bs_helper(post, regex);
 	// Concatenate post to pre.
 }
 
 void logical_or(temp_automaton& a1, char* regex) {
 	automaton a2;
+	printf("Or: %s\n", regex);
 	build_berry_setti(a2, regex);
 	// Do "or" between a1 and a2
 }
@@ -98,6 +110,7 @@ void star(temp_automaton& a) {
 }
 
 void build_bs_char(temp_automaton& a, char ch) {
+	printf("Char: %c\n", ch);
 	state start_state, final_state;
 	start_state.first_ch = ch;
 	start_state.start = -ch;

@@ -14,8 +14,10 @@ int newListSize(int& current) {
 	return current * 2;
 }
 
-char* substring(char* str, int start, int size) {
-	char* sub = new char[size];
-	strncpy(sub, str, size);
-	return str;
+char* substring(char* str, int start, int end) {
+	int size = end - start;
+	char* sub = new char[size+1];
+	strncpy(sub, str+start, size);
+	sub[size] = 0;
+	return sub;
 }

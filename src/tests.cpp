@@ -5,21 +5,27 @@
  *      Author: ivo
  */
 
+#include"stack.h"
 #include"tests.h"
 #include"automata.h"
 #include"stdio.h"
 #include"tr_list.h"
+#include"build.h"
 
 void test_table_expansion();
 void test_entry_expansion();
 void test_automaton_eval();
 void test_list();
+void test_bs_build();
+void test_stack();
 
 void run_tests() {
 	test_entry_expansion();
 	test_table_expansion();
 	test_automaton_eval();
 	test_list();
+	test_bs_build();
+	test_stack();
 }
 
 void test_table_expansion() {
@@ -64,5 +70,22 @@ void test_list() {
 			printf("Search is wrong - i=%d, ch=%d\n", i, (int)tr.ch);
 			break;
 		}
+	}
+}
+
+void test_bs_build() {
+	char* regex = (char*)"(reg)*";
+	automaton a;
+	build_berry_setti(a, regex);
+}
+
+void test_stack() {
+	Stack<int> s;
+	for (int i=0; i<10; i++) {
+		s.push(i);
+	}
+	while(!s.isEmpty()) {
+		int i;
+		s.pop(i);
 	}
 }
