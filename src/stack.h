@@ -9,12 +9,6 @@
 #define STACK_H_
 
 template<class T>
-struct stack_node {
-	T* data = 0;
-	stack_node* prev = 0;
-};
-
-template<class T>
 class Stack {
 public:
 	Stack<T>();
@@ -24,10 +18,15 @@ public:
 
 	virtual void push(const T& el);
 	virtual void pop(T& returned);
-	virtual void peek(T& returned);
+	virtual T& peek();
 	virtual bool isEmpty();
 
 private:
+	template<class V>
+	struct stack_node {
+		V* data = 0;
+		stack_node* prev = 0;
+	};
 	stack_node<T>* head=0;
 };
 
@@ -84,8 +83,8 @@ void Stack<T>::pop(T& returned) {
 }
 
 template<class T>
-void Stack<T>::peek(T& returned) {
-	returned = *(head->data);
+T& Stack<T>::peek() {
+	return *(head->data);
 }
 
 template<class T>

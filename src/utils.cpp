@@ -10,7 +10,7 @@
 
 int newListSize(int& current) {
 	if (current <= 0)
-		return 5;
+		return 1;
 	return current * 2;
 }
 

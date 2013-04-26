@@ -9,12 +9,6 @@
 #define queue_H_
 
 template<class T>
-struct queue_node {
-	T* data = 0;
-	queue_node* next = 0;
-};
-
-template<class T>
 class Queue {
 public:
 	Queue<T>();
@@ -24,10 +18,16 @@ public:
 
 	virtual void push(const T& el);
 	virtual void pop(T& returned);
-	virtual void peek(T& returned);
+	virtual T& peek();
+	virtual T& peek_last();
 	virtual bool isEmpty();
 
 private:
+	template<class V>
+	struct queue_node {
+		V* data = 0;
+		queue_node* next = 0;
+	};
 	queue_node<T>* head = 0;
 	queue_node<T>* tail = 0;
 };
@@ -42,7 +42,7 @@ template<class T>
 Queue<T>::Queue(const Queue<T>& s) {
 	queue_node<T>* next = s.head;
 	while(next != 0) {
-		push(next->data);
+		push(*(next->data));
 	}
 }
 
@@ -60,13 +60,14 @@ const Queue<T>& Queue<T>::operator =(const Queue<T>& s) {
 	queue_node<T>* node = this->head;
 	while(node != 0) {
 		delete node->data;
-		node = node->prev;
+		node = node->next;
 	}
 	tail = 0;
 	queue_node<T>* next = s.head;
 	while(next != 0) {
-		push(next->data);
+		push(*(next->data));
 	}
+	return *this;
 }
 
 template<class T>
@@ -94,8 +95,13 @@ void Queue<T>::pop(T& returned) {
 }
 
 template<class T>
-void Queue<T>::peek(T& returned) {
-	returned = *(head->data);
+T& Queue<T>::peek() {
+	return *(head->data);
+}
+
+template<class T>
+T& Queue<T>::peek_last() {
+	return *(tail->data);
 }
 
 template<class T>

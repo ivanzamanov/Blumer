@@ -5,6 +5,8 @@
  *      Author: ivo
  */
 
+#include"queue.h"
+#include"stack.h"
 #include"build.h"
 #include"automata.h"
 #include"states_list.h"
@@ -23,9 +25,9 @@ struct temp_automaton {
 void build_bs_helper(temp_automaton& a, char* regex);
 void build_bs_char(temp_automaton& a, char c);
 
-void concat(temp_automaton& pre, char* regex);
+void concat(temp_automaton& pre, temp_automaton& post);
+void logical_or(temp_automaton& pre, temp_automaton& post);
 void star(temp_automaton& a);
-void logical_or(temp_automaton& pre, char* regex);
 
 /*!
  * 	Basic idea is the following - first build it as a simple graph
@@ -39,70 +41,68 @@ void logical_or(temp_automaton& pre, char* regex);
 void build_berry_setti(automaton& a, char* regex) {
 	temp_automaton tmp;
 	build_bs_helper(tmp, regex);
-	// Compress tmp into a.
+	// TODO: Compress tmp into a.
 }
 
+void add_queue(Stack<Queue<temp_automaton>>& s) {
+	Queue<temp_automaton> q;
+	temp_automaton a;
+	q.push(a);
+	s.push(q);
+}
+
+/*
+ * Idea for implementing parsing:
+ * Stack of lists of automatons.
+ * For every character in the regex:
+ * - if char == (, then push in another list
+ * - if char == ), then pop a list, create union
+ * of all automatons in the popped list, char++,
+ * add the resulting automaton to the list at the head
+ * - if char == |, then add a new automaton to the list
+ * - otherwise, concatenate char to the last automaton
+ * in the current list
+ *
+ * Time: O(strlen(regex)), which should be minimal.
+ */
 void build_bs_helper(temp_automaton& a, char* regex) {
 	if (regex == 0) {
 		return;
 	}
-	int len = strlen(regex);
-	printf("Regex: %s  ---  ", regex);
-	if (len == 0) {
-		state only_state;
-		only_state.first_ch = 0;
-		only_state.isFinal = true;
-		only_state.start = -1;
-		a.states.add(only_state);
-		return;
-	} else if (len == 1) {
-		build_bs_char(a, regex[0]);
-		return;
-	} else if (len >= 3 && regex[0] == '('
-						&& regex[len - 1] == '*'
-						&& regex[len - 2] == ')') {
-		int sublen = len - 2;
-		char* sub = substring(regex, 1, sublen);
-		build_bs_helper(a, sub);
-		delete sub;
-		printf("Star of %s\n", regex);
-		star(a);
-	} else {
-		int index;
-		for (index = 0; index < len; index++) {
-			if (regex[index] == '|')
-				break;
-		}
-		if (index == len) {
-			char* sub = substring(regex, 1, len);
-			char* ch = substring(regex, 0, 1);
-			concat(a, ch);
-			delete ch;
-			concat(a, sub);
-			delete sub;
+	Stack<Queue<temp_automaton>> s;
+	add_queue(s);
+	int i = 0;
+	while (regex[i] != 0) {
+		if (regex[i] == '(') {
+			add_queue(s);
+		} else if (regex[i] == ')') {
+			i++; // Because of the *
+			Queue<temp_automaton> q;
+			s.pop(q);
+			temp_automaton first;
+			q.pop(first);
+			while (!q.isEmpty()) {
+				temp_automaton next;
+				q.pop(next);
+				concat(first, next);
+			}
 		} else {
-//			char* regex1 = substring(regex, 0, index);
-//			char* regex2 = substring(regex, index+1, len);
-//			temp_automaton a1, a2;
-//			build_bs_helper(a1, regex1);
-//			build_bs_helper(a2, regex2);
-
+			// Concatenate regex[i] to s.peek().peek_last(),
+			// i.e. to the last automaton.
+			temp_automaton a;
+			build_bs_char(a, regex[i]);
+			concat(s.peek().peek_last(), a);
 		}
+		i++;
 	}
 }
 
-void concat(temp_automaton& pre, char* regex) {
-	temp_automaton post;
-	printf("Concat: %s\n", regex);
-	build_bs_helper(post, regex);
-	// Concatenate post to pre.
+void concat(temp_automaton& pre, temp_automaton& post) {
+
 }
 
-void logical_or(temp_automaton& a1, char* regex) {
-	automaton a2;
-	printf("Or: %s\n", regex);
-	build_berry_setti(a2, regex);
-	// Do "or" between a1 and a2
+void logical_or(temp_automaton& pre, temp_automaton& post) {
+
 }
 
 void star(temp_automaton& a) {
