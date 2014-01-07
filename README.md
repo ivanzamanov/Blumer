@@ -1,4 +1,4 @@
-Automata
+Blumer
 ========
 
-C implementation of my Automata university course assignment
+C implementation of Blumer & Blumer algorithm for building a DAWG
