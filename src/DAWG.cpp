@@ -4,43 +4,37 @@
 #include <stdio.h>
 
 const double factor = 1.5;
-void expandDAWG(DAWG& dawg) {
+void DAWG::expand() {
+  DAWG& dawg = *this;
   int new_c = ((double) dawg.states_c) * factor;
   expand_array(dawg.length, dawg.states_c, new_c);
   expand_array(dawg.slink, dawg.states_c, new_c);
   printf("New length = %d\n", new_c);
   int (*new_trans)[MAX_CHAR] = new int[new_c][MAX_CHAR];
-  for (int i=0; i<dawg.states_c; i++) {
-    for (int j = 0; j<MAX_CHAR; j++) {
-      new_trans[i][j] = dawg.trans[i][j];
-    } 
+  for (int i = 0; i < dawg.states_c; i++) {
+    copy_array(dawg.trans[i], new_trans[i], MAX_CHAR);
   }
   delete dawg.trans;
   dawg.trans = new_trans;
-  for (int i=dawg.states_c; i<new_c; i++) {
-    for (int j = 0; j<MAX_CHAR; j++) {
-      dawg.trans[i][j] = -1;
-    } 
+  for (int i = dawg.states_c; i < new_c; i++) {
+    fill_array(dawg.trans[i], MAX_CHAR, -1);
   }
   dawg.states_c = new_c;
 }
 
-int new_state(DAWG& fda) {
-  int result = fda.last_state + 1;
-  if(result == fda.states_c) {
-    expandDAWG(fda);
+int DAWG::new_state() {
+  int result = this->last_state + 1;
+  if(result == this->states_c) {
+    this->expand();
   }
-  fda.last_state = result;
+  this->last_state = result;
   return result;
 }
 
-int update(DAWG& fda, int current, char c);
-int split(DAWG& fda, int state, char c);
-
-int hit = 0;
-int update_DAWG(DAWG& fda, int current, char a) {
+int DAWG::update(int current, char a) {
+  DAWG& fda = *this;
   int b = (int) a;
-  int n_state = new_state(fda);
+  int n_state = fda.new_state();
   fda.length[n_state] = fda.length[current] + 1;
   fda.trans[current][b] = n_state;
   
@@ -53,7 +47,7 @@ int update_DAWG(DAWG& fda, int current, char a) {
     } else if (fda.length[suffix_state] + 1 == fda.length[next]) {
       t = next;
     } else {
-      t = split(fda, suffix_state, a);
+      t = split(suffix_state, a);
     }
   }
 
@@ -65,10 +59,11 @@ int update_DAWG(DAWG& fda, int current, char a) {
   return n_state;
 }
 
-int split(DAWG& fda, int state, char c) {
+int DAWG::split(int state, char c) {
+  DAWG& fda = *this;
   int a = (int) c;
   int r = fda.trans[state][a];
-  int n = new_state(fda);
+  int n = fda.new_state();
   fda.length[n] = fda.length[state] + 1;
   fda.trans[state][a] = n;
 

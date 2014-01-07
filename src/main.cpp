@@ -44,7 +44,7 @@ DAWG* buildDAWG(const int& fd) {
   while(bytes > 0) {
     bytes = read(fd, buf, SIZE);
     for (int i=0; i<bytes; i++) {
-      current = update_DAWG(*fda, current, buf[i] - 97);
+      current = fda->update(current, buf[i] - 97);
     }  
   }
 

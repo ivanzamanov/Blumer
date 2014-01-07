@@ -2,7 +2,8 @@
 #define __DAWG_H__
 
 const int MAX_CHAR = 26;
-struct DAWG {
+class DAWG {
+public:
   DAWG() {
     length = new int[2];
     length[0] = 0;
@@ -33,9 +34,16 @@ struct DAWG {
     delete slink;
     delete trans;
   }
+
+  int update(int current, char a);
+
+private:
+  void expand();
+  int new_state();
+  int split(int state, char c);
+  
 };
 
-void expandDAWG(const DAWG& dawg);
 int new_state(const DAWG& dawg);
 int update_DAWG(DAWG& fda, int current, char a);
 
