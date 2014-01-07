@@ -11,13 +11,10 @@ make
 if [ -f test/main ]; then
   rm test/main
 fi
-cp bin/main test
-pushd test
 echo "Running java"
-#time java -jar JBlumer.jar $TESTFILE -Xmx=4g
+#time java -jar test/JBlumer.jar $TESTFILE -Xmx=4g
 echo "Running c"
-time ./main $TESTFILE
+time bin/main $TESTFILE
 #./main $TESTFILE
-#gdb ./main -x debug.gdb
-cd ..
+#gdb ./main -x test/debug.gdb
 
