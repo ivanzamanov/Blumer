@@ -1,7 +1,24 @@
-#include "utils.h"
 #include "DAWG.h"
+#include "utils.h"
 
 #include <stdio.h>
+
+DAWG::DAWG() {
+  length = new int[2];
+  length[0] = 0;
+  length[1] = 1;
+  slink = new int[2];
+  slink[0] = -1;
+  slink[1] = -1;
+  trans = new int[2][MAX_CHAR];
+  for (int i=0; i<MAX_CHAR; i++) {
+    trans[0][i] = -1;
+    trans[1][i] = -1;
+  }
+  initial = 0;
+  states_c = 2;
+  last_state = 0;
+}
 
 const double factor = 1.5;
 void DAWG::expand() {
