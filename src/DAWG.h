@@ -8,11 +8,11 @@ public:
 
   int* length;
   int* slink;
-  int (*trans)[MAX_CHAR];
   int initial;
-
   int states_c;
   int last_state;
+
+  int (*trans)[MAX_CHAR];
 
   ~DAWG() {
     delete length;
@@ -31,8 +31,5 @@ private:
   void copy_trans(int dest, int src);
   
 };
-
-int new_state(const DAWG& dawg);
-int update_DAWG(DAWG& fda, int current, char a);
 
 #endif

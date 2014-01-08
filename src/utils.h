@@ -38,4 +38,22 @@ inline void copy_array(T* from, T* to, const int length) {
   }
 }
 
+template<class T>
+inline int bin_search(T* array, int n, const T& x) {
+  int left = 0;
+  int right = n;
+  int current;
+  while (left < right) {
+    current = (left + right) / 2;
+    if(array[current] == x) {
+      return current;
+    } else if (array[current] > x) {
+      right = current;
+    } else if (array[current] < x) {
+      left = current + 1;
+    }
+  }
+  return -right;
+}
+
 #endif

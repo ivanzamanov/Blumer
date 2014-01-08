@@ -5,19 +5,16 @@
 
 DAWG::DAWG() {
   length = new int[2];
-  length[0] = 0;
-  length[1] = 1;
+  fill_array(length, 2, -1);
   slink = new int[2];
-  slink[0] = -1;
-  slink[1] = -1;
-  trans = new int[2][MAX_CHAR];
-  for (int i=0; i<MAX_CHAR; i++) {
-    trans[0][i] = -1;
-    trans[1][i] = -1;
-  }
+  fill_array(slink, 2, -1);
   initial = 0;
   states_c = 2;
   last_state = 0;
+
+  trans = new int[2][MAX_CHAR];
+  fill_array(trans[0], MAX_CHAR, -1);
+  fill_array(trans[1], MAX_CHAR, -1);
 }
 
 const double factor = 1.5;
