@@ -6,7 +6,6 @@
 #include <fcntl.h>
 
 #include "DAWG.h"
-#include "utils.h"
 
 using namespace std;
 
