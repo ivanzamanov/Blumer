@@ -4,6 +4,8 @@
 const int MAX_CHAR = 26;
 class DAWG {
 public:
+  DAWG();
+
   int* length;
   int* slink;
   int (*trans)[MAX_CHAR];
@@ -24,6 +26,9 @@ private:
   void expand();
   int new_state();
   int split(int state, char c);
+  int get_trans(int from, unsigned char ch);
+  void set_trans(int from, unsigned char ch, int to);
+  void copy_trans(int dest, int src);
   
 };
 

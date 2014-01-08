@@ -53,14 +53,14 @@ int DAWG::update(int current, char a) {
   int b = (int) a;
   int n_state = fda.new_state();
   fda.length[n_state] = fda.length[current] + 1;
-  fda.trans[current][b] = n_state;
+  fda.set_trans(current, b, n_state);
   
   int t = -1, suffix_state = current;
   while (suffix_state != fda.initial && t == -1) {
     suffix_state = fda.slink[suffix_state];
     int next = fda.trans[suffix_state][b];
     if (next < 0) {
-      fda.trans[suffix_state][b] = n_state;
+      fda.set_trans(suffix_state, b, n_state);
     } else if (fda.length[suffix_state] + 1 == fda.length[next]) {
       t = next;
     } else {
@@ -79,22 +79,20 @@ int DAWG::update(int current, char a) {
 int DAWG::split(int state, char c) {
   DAWG& fda = *this;
   int a = (int) c;
-  int r = fda.trans[state][a];
+  int r = fda.get_trans(state, a);
   int n = fda.new_state();
   fda.length[n] = fda.length[state] + 1;
-  fda.trans[state][a] = n;
+  fda.set_trans(state, a, n);
 
-  for (int i=0; i<MAX_CHAR; i++) {
-    fda.trans[n][i] = fda.trans[r][i];
-  }
+  fda.copy_trans(n, r);
   fda.slink[n] = fda.slink[r];
   fda.slink[r] = n;
 
   int u = state;
   while (u != fda.initial) {
     u = fda.slink[u];
-    if (fda.trans[u][a] == r) {
-      fda.trans[u][a] = n;
+    if(fda.get_trans(u, a) == r) {
+      fda.set_trans(u, a, n);
     } else {
       break;
     }
@@ -102,3 +100,16 @@ int DAWG::split(int state, char c) {
   return n;
 }
 
+int DAWG::get_trans(int from, unsigned char ch) {
+  return trans[from][ch];
+}
+
+void DAWG::set_trans(int from, unsigned char ch, int to) {
+  trans[from][ch] = to;
+}
+
+void DAWG::copy_trans(int dest, int src) {  
+  for (int i=0; i<MAX_CHAR; i++) {
+    trans[dest][i] = trans[src][i];
+  }
+}
