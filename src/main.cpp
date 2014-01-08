@@ -6,12 +6,22 @@
 #include <fcntl.h>
 
 #include "DAWG.h"
+#include "utils.h"
 
 using namespace std;
 
 DAWG* buildDAWG(const int& fd);
 
 int main(int argc, char** argv) {
+  int* arr = new int[5];
+  for (int i=0; i<5; i++) {
+    arr[i] = i;
+  }
+  for (int i=-5; i<10; i++) {
+    printf("%d\n", bin_search(arr, 5, i));
+  }
+  return 0;
+
   if(argc < 2) {
     printf("No input file specified\n");
     return 1;
