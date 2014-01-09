@@ -6,12 +6,25 @@
 #include <fcntl.h>
 
 #include "DAWG.h"
+#include "hash.h"
 
 using namespace std;
 
 DAWG* buildDAWG(const int& fd);
 
 int main(int argc, char** argv) {
+  hash<int> h;
+  unsigned char ch = MAX_CHAR;
+  for (int i=MAX_CHAR; i <= 2*MAX_CHAR; i++) {
+    h.insert(ch, i);
+    ch++;
+  }
+  ch = 0;
+  for (int i=0; i<=3 * MAX_CHAR; i++) {
+    printf("%d\n", h.get(ch, -1));
+    ch++;
+  }
+    printf("Table size = %d, cap = %d\n", h.size, h.cap);
   if(argc < 2) {
     printf("No input file specified\n");
     return 1;

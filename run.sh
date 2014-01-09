@@ -16,6 +16,6 @@ time java -jar test/JBlumer.jar $TESTFILE -Xmx=4g
 echo "Running c"
 #time bin/main $TESTFILE
 #./main $TESTFILE
-#gdb bin/main -x test/debug.gdb
-gdb bin/main <<< "run $TESTFILE"
+gdb bin/main -x test/debug.gdb
+#gdb bin/main <<< "run $TESTFILE"
 
