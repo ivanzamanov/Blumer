@@ -1,9 +1,9 @@
 #include "utils.h"
 
-const int P = 29;
-const int C = 23;
+const int P = 53;
+const int C = 50;
 const double LOAD_FACTOR = 0.8d;
-const int MAX_CAP = 26;
+const int MAX_CAP = 32;
 
 typedef int key_t;
 
@@ -11,6 +11,7 @@ template<class T>
 class hash {
 public:
   hash();
+  hash(const hash& other);
 
   int cap = 4;
   int size = 0;
@@ -40,6 +41,18 @@ hash<T>::hash() {
   h.table = new entry[cap];
   for (int i=0; i<cap; i++) {
     h.table[i].key = -1;
+  }
+}
+
+template<class T>
+hash<T>::hash(const hash& other) {
+  hash<T>& h = *this;
+  h.cap = other.cap;
+  h.size = other.size;
+  h.table = new entry[cap];
+  for (int i=0; i<cap; i++) {
+    h.table[i].key = other.table[i].key;
+    h.table[i].data = other.table[i].data;
   }
 }
 
@@ -83,7 +96,7 @@ const T& hash<T>::get(const key_t& key, const T& def) {
 
 template<class T>
 int hash<T>::get_hash(const key_t key, const int& i) {
-  return (C * key % P + i) % this->cap;
+  return ((C * key) % P + i) % this->cap;
 }
 
 template<class T>
