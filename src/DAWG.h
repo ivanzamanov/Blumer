@@ -1,5 +1,8 @@
+#include "hash.h"
+
 #ifndef __DAWG_H__
 #define __DAWG_H__
+
 
 const int MAX_CHAR = 26;
 class DAWG {
@@ -12,7 +15,7 @@ public:
   int states_c;
   int last_state;
 
-  int (*trans)[MAX_CHAR];
+  hash<int> **trans;
 
   ~DAWG() {
     delete length;

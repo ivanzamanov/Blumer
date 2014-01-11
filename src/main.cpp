@@ -13,18 +13,6 @@ using namespace std;
 DAWG* buildDAWG(const int& fd);
 
 int main(int argc, char** argv) {
-  hash<int> h;
-  unsigned char ch = MAX_CHAR;
-  for (int i=MAX_CHAR; i <= 2*MAX_CHAR; i++) {
-    h.insert(ch, i);
-    ch++;
-  }
-  ch = 0;
-  for (int i=0; i<=3 * MAX_CHAR; i++) {
-    printf("%d\n", h.get(ch, -1));
-    ch++;
-  }
-    printf("Table size = %d, cap = %d\n", h.size, h.cap);
   if(argc < 2) {
     printf("No input file specified\n");
     return 1;
@@ -32,6 +20,7 @@ int main(int argc, char** argv) {
     int fd;
     fd = open(argv[1], O_RDONLY);
     DAWG* fda = buildDAWG(fd);
+/*
     int total = 0;
     for(int i=0; i<fda->last_state+1; i++) {
       int count = 0;
@@ -42,8 +31,9 @@ int main(int argc, char** argv) {
       if(count != 1)
         total++;
     }
-    printf("Total states = %d\n", fda->last_state + 1);
     printf("Output states = %d\n", total);
+*/
+    printf("Total states = %d\n", fda->last_state + 1);
   }
 }
 

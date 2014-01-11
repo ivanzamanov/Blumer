@@ -1,11 +1,15 @@
 #include "utils.h"
 
+#ifndef __HASH_H__
+#define __HASH_H__
+
+
 const int P = 53;
 const int C = 50;
 const double LOAD_FACTOR = 0.8d;
 const int MAX_CAP = 32;
 
-typedef int key_t;
+typedef unsigned char key_t;
 
 template<class T>
 class hash {
@@ -124,3 +128,5 @@ void hash<T>::expand() {
   }
   limit = cap;
 }
+
+#endif
