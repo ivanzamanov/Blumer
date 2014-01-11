@@ -9,32 +9,28 @@ const int C = 50;
 const double LOAD_FACTOR = 0.8d;
 const int MAX_CAP = 32;
 
-typedef unsigned char key_t;
+typedef char hash_key_t;
 
 template<class T>
 class hash {
 public:
   hash();
-  hash(const hash& other);
+  hash(const hash<T>& other);
 
   int cap = 4;
   int size = 0;
 
-  void insert(const key_t& key, const T& data);
-  const T& get(const key_t& key, const T& def);
+  void insert(const hash_key_t& key, const T& data);
+  const T& get(const hash_key_t& key, const T& def);
 
 private:
   void expand();
-  int get_hash(const key_t key, const int& i);
+  int get_hash(const hash_key_t& key, const int& i);
 
   int limit = 4;
 
-  struct entry {
-    key_t key;
-    T data;
-  };
-
-  entry* table;
+  T* data;
+  hash_key_t* keys;
 };
 
 template<class T>
@@ -42,37 +38,39 @@ hash<T>::hash() {
   hash<T>& h = *this;
   h.cap = 4;
   h.size = 0;
-  h.table = new entry[cap];
+  h.keys = new hash_key_t[cap];
   for (int i=0; i<cap; i++) {
-    h.table[i].key = -1;
+    h.keys[i] = -1;
   }
+  h.data = new T[cap];
 }
 
 template<class T>
-hash<T>::hash(const hash& other) {
+hash<T>::hash(const hash<T>& other) {
   hash<T>& h = *this;
   h.cap = other.cap;
   h.size = other.size;
-  h.table = new entry[cap];
+  h.keys = new hash_key_t[cap];
+  h.data = new T[cap];
   for (int i=0; i<cap; i++) {
-    h.table[i].key = other.table[i].key;
-    h.table[i].data = other.table[i].data;
+    h.keys[i] = other.keys[i];
+    h.data[i] = other.data[i];
   }
 }
 
 template<class T>
-void hash<T>::insert(const key_t& key, const T& data) {
+void hash<T>::insert(const hash_key_t& key, const T& data) {
   size++;
   if(size >= cap * LOAD_FACTOR) {
     expand();
   }
   int i = 0;
   while(i <= limit) {
-  int h = get_hash(key, i);
-    entry& current = table[h];
-    if(current.key == -1 || current.key == key) {
-      current.key = key;
-      current.data = data;
+    int h = get_hash(key, i);
+    hash_key_t& current = keys[h];
+    if(current == -1 || current == key) {
+      current = key;
+      this->data[h] = data;
       return;
     }
     i++;
@@ -83,14 +81,14 @@ void hash<T>::insert(const key_t& key, const T& data) {
 }
 
 template<class T>
-const T& hash<T>::get(const key_t& key, const T& def) {
+const T& hash<T>::get(const hash_key_t& key, const T& def) {
   int i = 0;
   while(i <= limit) {
-  int h = get_hash(key, i);
-    entry& current = table[h];
-    if(current.key == key) {
-      return current.data;
-    } else if(current.key == -1) {
+    int h = get_hash(key, i);
+    hash_key_t& current = keys[h];
+    if(current == key) {
+      return data[h];
+    } else if(current == -1) {
       return def;
     }
     i++;
@@ -99,7 +97,7 @@ const T& hash<T>::get(const key_t& key, const T& def) {
 }
 
 template<class T>
-int hash<T>::get_hash(const key_t key, const int& i) {
+int hash<T>::get_hash(const hash_key_t& key, const int& i) {
   return ((C * key) % P + i) % this->cap;
 }
 
@@ -109,23 +107,28 @@ void hash<T>::expand() {
   if(table.cap == MAX_CAP) {
     return;
   }
-  entry* old_table = table.table;
+  hash_key_t* old_table = table.keys;
+  T* old_data = table.data;
   int old_cap = table.cap;
   table.cap = old_cap * 2;
   if(table.cap > MAX_CAP) {
     table.cap = MAX_CAP;
   }
-  table.table = new entry[table.cap];
+  table.keys = new hash_key_t[table.cap];
+  table.data = new T[table.cap];
   for(int i = 0; i < table.cap; i++) {
-    table.table[i].key = -1;
+    table.keys[i] = -1;
   }
   table.size = 0;
   for (int i=0; i < old_cap; i++) {
-    entry& entry = old_table[i];
-    if(entry.key >= 0) {
-      table.insert(entry.key, entry.data);
+    hash_key_t key = old_table[i];
+    T& data = old_data[i];
+    if(key >= 0) {
+      table.insert(key, data);
     }
   }
+  delete old_table;
+  delete old_data;
   limit = cap;
 }
 

@@ -13,6 +13,20 @@ using namespace std;
 DAWG* buildDAWG(const int& fd);
 
 int main(int argc, char** argv) {
+/*
+  hash<int> h;
+  unsigned char ch = 0;
+  for (int i=0; i<32; i++) {
+    h.insert(ch, i);
+    ch++;
+  }
+  ch=0;
+  for (int i=0; i<32; i++) {
+    printf("%d ", h.get(ch, -1));
+    ch++;
+  }
+  return 0;
+*/
   if(argc < 2) {
     printf("No input file specified\n");
     return 1;

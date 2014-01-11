@@ -23,13 +23,13 @@ DAWG::DAWG() {
 const double factor = 1.5;
 void DAWG::expand() {
   DAWG& dawg = *this;
-  int tr = 0;
-  int sizes = 0;
+  double tr = 0;
+  double sizes = 0;
   for (int i=0; i<=last_state; i++) {
     tr += dawg.trans[i]->size;
     sizes += dawg.trans[i]->cap;
   }
-  printf("Trans = %d, Size = %d\n", tr, sizes);
+//  printf("Trans = %f, Size = %f\n", tr/last_state, sizes/last_state);
   int new_c = ((double) dawg.states_c) * factor;
   expand_array(dawg.length, dawg.states_c, new_c);
   expand_array(dawg.slink, dawg.states_c, new_c);
