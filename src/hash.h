@@ -3,7 +3,6 @@
 #ifndef __HASH_H__
 #define __HASH_H__
 
-
 const int P = 53;
 const int C = 50;
 const double LOAD_FACTOR = 0.8d;
@@ -17,8 +16,8 @@ public:
   hash();
   hash(const hash<T>& other);
 
-  int cap = 4;
-  int size = 0;
+  int cap;
+  int size;
 
   void insert(const hash_key_t& key, const T& data);
   const T& get(const hash_key_t& key, const T& def);
@@ -27,8 +26,6 @@ private:
   void expand();
   int get_hash(const hash_key_t& key, const int& i);
 
-  int limit = 4;
-
   T* data;
   hash_key_t* keys;
 };
@@ -36,7 +33,7 @@ private:
 template<class T>
 hash<T>::hash() {
   hash<T>& h = *this;
-  h.cap = 4;
+  h.cap = 1;
   h.size = 0;
   h.keys = new hash_key_t[cap];
   for (int i=0; i<cap; i++) {
@@ -52,47 +49,37 @@ hash<T>::hash(const hash<T>& other) {
   h.size = other.size;
   h.keys = new hash_key_t[cap];
   h.data = new T[cap];
-  for (int i=0; i<cap; i++) {
+  for (int i=0; i<size; i++) {
     h.keys[i] = other.keys[i];
     h.data[i] = other.data[i];
   }
 }
 
 template<class T>
-void hash<T>::insert(const hash_key_t& key, const T& data) {
-  size++;
-  if(size >= cap * LOAD_FACTOR) {
-    expand();
-  }
-  int i = 0;
-  while(i <= limit) {
-    int h = get_hash(key, i);
-    hash_key_t& current = keys[h];
-    if(current == -1 || current == key) {
-      current = key;
-      this->data[h] = data;
-      return;
+void hash<T>::insert(const hash_key_t& key, const T& el) {
+  int index = bin_search(keys, size, key);
+  if(index >= 0) {
+    this->data[index] = el;
+  } else {
+    if(size >= cap)
+      expand();
+    index = -index - 1;
+    for (int i = size; i > index; i--) {
+      keys[i] = keys[i-1];
+      data[i] = data[i-1];
     }
-    i++;
+    keys[index] = key;
+    data[index] = el;
+    size++;
   }
-  expand();
-  size--;
-  insert(key, data);
 }
 
 template<class T>
 const T& hash<T>::get(const hash_key_t& key, const T& def) {
-  int i = 0;
-  while(i <= limit) {
-    int h = get_hash(key, i);
-    hash_key_t& current = keys[h];
-    if(current == key) {
-      return data[h];
-    } else if(current == -1) {
-      return def;
-    }
-    i++;
-  }
+  int index = bin_search(keys, size, key);
+  if(index >= 0)
+    return data[index];
+  
   return def;
 }
 
@@ -104,32 +91,10 @@ int hash<T>::get_hash(const hash_key_t& key, const int& i) {
 template<class T>
 void hash<T>::expand() {
   hash<T>& table = *this;
-  if(table.cap == MAX_CAP) {
-    return;
-  }
-  hash_key_t* old_table = table.keys;
-  T* old_data = table.data;
-  int old_cap = table.cap;
-  table.cap = old_cap * 2;
-  if(table.cap > MAX_CAP) {
-    table.cap = MAX_CAP;
-  }
-  table.keys = new hash_key_t[table.cap];
-  table.data = new T[table.cap];
-  for(int i = 0; i < table.cap; i++) {
-    table.keys[i] = -1;
-  }
-  table.size = 0;
-  for (int i=0; i < old_cap; i++) {
-    hash_key_t key = old_table[i];
-    T& data = old_data[i];
-    if(key >= 0) {
-      table.insert(key, data);
-    }
-  }
-  delete old_table;
-  delete old_data;
-  limit = cap;
+  int new_c = table.cap + 1;
+  expand_array(table.keys, table.cap, new_c);
+  expand_array(table.data, table.cap, new_c);
+  table.cap = new_c;
 }
 
 #endif

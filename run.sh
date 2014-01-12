@@ -5,8 +5,8 @@
 #  exit 1;
 #fi
 
-#TESTFILE=data/words-prepped.txt
-TESTFILE=data/titles-large.txt
+TESTFILE=data/words-prepped.txt
+#TESTFILE=data/titles-large.txt
 set -e
 make
 if [ -f test/main ]; then

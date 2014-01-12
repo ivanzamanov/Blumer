@@ -13,20 +13,6 @@ using namespace std;
 DAWG* buildDAWG(const int& fd);
 
 int main(int argc, char** argv) {
-/*
-  hash<int> h;
-  unsigned char ch = 0;
-  for (int i=0; i<32; i++) {
-    h.insert(ch, i);
-    ch++;
-  }
-  ch=0;
-  for (int i=0; i<32; i++) {
-    printf("%d ", h.get(ch, -1));
-    ch++;
-  }
-  return 0;
-*/
   if(argc < 2) {
     printf("No input file specified\n");
     return 1;
@@ -34,20 +20,14 @@ int main(int argc, char** argv) {
     int fd;
     fd = open(argv[1], O_RDONLY);
     DAWG* fda = buildDAWG(fd);
-/*
     int total = 0;
     for(int i=0; i<fda->last_state+1; i++) {
-      int count = 0;
-      for (int j = 0; j<MAX_CHAR; j++) {
-        if(fda->trans[i][j] != -1) 
-          count++;
-      }
+      int count = fda->trans[i]->size;
       if(count != 1)
         total++;
     }
-    printf("Output states = %d\n", total);
-*/
     printf("Total states = %d\n", fda->last_state + 1);
+    printf("Output states = %d\n", total);
   }
 }
 
@@ -58,11 +38,17 @@ DAWG* buildDAWG(const int& fd) {
   DAWG* fda = new DAWG;
   int current = fda->initial;
   int bytes = 1;
+  int total = 0;
+  struct stat st;
+  fstat(fd, &st);
+  fda->max_cap = st.st_size * 2;
   while(bytes > 0) {
     bytes = read(fd, buf, SIZE);
     for (int i=0; i<bytes; i++) {
-      current = fda->update(current, buf[i] - 97);
-    }  
+      current = fda->update(current, buf[i]);
+    }
+    total += bytes;
+    printf("Total bytes = %d\n", total);
   }
 
   return fda;

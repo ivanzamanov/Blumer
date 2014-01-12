@@ -53,7 +53,7 @@ inline int bin_search(T* array, int n, const T& x) {
       left = current + 1;
     }
   }
-  return -right;
+  return -(right + 1);
 }
 
 #endif

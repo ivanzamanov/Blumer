@@ -14,10 +14,14 @@ public:
   int initial;
   int states_c;
   int last_state;
+  int max_cap = -1;
 
   hash<int> **trans;
 
   ~DAWG() {
+    for (int i=0; i<states_c; i++) {
+      delete trans[i];
+    }
     delete length;
     delete slink;
     delete trans;

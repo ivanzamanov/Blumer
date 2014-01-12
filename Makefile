@@ -1,5 +1,5 @@
 
-FLAGS= -Wall -std=c++11 -g
+FLAGS= -Wall -std=c++11 -O3
 CC=g++
 CMD=$(CC) $(FLAGS)
 

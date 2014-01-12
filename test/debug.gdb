@@ -1,14 +1,7 @@
 
 set verbose off
 
-b hash.h:65
-ignore 1 100
-command 1
-  print size
-  print cap
-#  continue
-end
-
+#b DAWG.cpp:DAWG::update
 run data/words-prepped.txt
 
 #quit
