@@ -25,8 +25,8 @@ int main(int argc, char** argv) {
       if(fda->types[i].field != 1)
         output++;
     }
-    printf("Total states = %d\n", fda->last_state + 1);
-    printf("Output states = %d\n", output);
+//    printf("Total states = %d\n", fda->last_state + 1);
+    printf("%d\n", output);
   }
 }
 
@@ -37,7 +37,6 @@ DAWG* buildDAWG(const int& fd) {
   DAWG* fda = new DAWG;
   int current = fda->initial;
   int bytes = 1;
-  int total = 0;
   struct stat st;
   fstat(fd, &st);
   fda->max_cap = st.st_size * 2;
@@ -46,8 +45,6 @@ DAWG* buildDAWG(const int& fd) {
     for (int i=0; i<bytes; i++) {
       current = fda->update(current, buf[i]);
     }
-    total += bytes;
-    printf("Bytes = %d\n", total);
   }
 
   return fda;

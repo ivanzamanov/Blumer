@@ -13,7 +13,6 @@ DAWG::DAWG() {
   initial = 0;
   states_c = 2;
   last_state = 0;
-  output_count = 1;
 
   trans = new void*[2];
   trans[0] = 0;
@@ -46,7 +45,6 @@ int DAWG::new_state() {
   }
   types[result].field = 0;
   trans[result] = 0;
-  output_count++;
   this->last_state = result;
   return result;
 }
@@ -135,7 +133,6 @@ int DAWG::get_trans(int from, unsigned char ch) {
 void DAWG::set_trans(int from, unsigned char ch, int to) {
   if(types[from].field == 0) {
     trans[from] = (void*) encode(ch, to);
-    output_count--;
     types[from].field = 1;
   } else if(types[from].field == 1) {
     unsigned char key = get_key((unsigned long int)trans[from]);
@@ -150,7 +147,6 @@ void DAWG::set_trans(int from, unsigned char ch, int to) {
       trans[from] = h;
       
       types[from].field = 2;
-      output_count++;
     }
   } else {
     ((hash<int>*)trans[from])->insert(ch, to);
@@ -163,17 +159,10 @@ void DAWG::copy_trans(int dest, int src) {
   if(types[dest].field == 2) {
     delete (hash<int>*)trans[dest];
   }
-  int old_type = types[dest].field;
+  
   types[dest].field = types[src].field;
   if(types[dest].field == 2) {
     trans[dest] = new hash<int>( *(hash<int>*) trans[src] );
   } else
     trans[dest] = trans[src];
-
-  if(old_type != types[dest].field) {
-    if(old_type == 1)
-      output_count--;
-    else
-      output_count++;
-  }
 }
