@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void test(int key, int val, hash<int>& h);
+/*void test(int key, int val, hash<int>& h);
 
 int main(int argc, char** argv) {
   hash<int> h;
@@ -40,4 +40,17 @@ void test(int key, int val, hash<int>& h) {
   if(res != val) {
     printf("res = %d ch = %d i = %d\n", res, key, val);
   }
+}
+*/
+
+int main() {
+  unsigned long int n_key = 0xFF;
+  unsigned long int n_val = 0xFE;
+  unsigned long int encoded = encode(n_key, n_val);
+  printf("%X\n", encoded);
+  unsigned long int key = get_key(encoded);
+  printf("%X\n", key);
+  unsigned long int val = get_value(encoded);
+  printf("%X\n", val);
+  return 0;
 }

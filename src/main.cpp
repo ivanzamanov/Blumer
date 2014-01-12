@@ -20,14 +20,13 @@ int main(int argc, char** argv) {
     int fd;
     fd = open(argv[1], O_RDONLY);
     DAWG* fda = buildDAWG(fd);
-    int total = 0;
-    for(int i=0; i<fda->last_state+1; i++) {
-      int count = fda->trans[i]->size;
-      if(count != 1)
-        total++;
+    int output = 0;
+    for (int i=0; i<fda->last_state + 1; i++) {
+      if(fda->types[i].field != 1)
+        output++;
     }
     printf("Total states = %d\n", fda->last_state + 1);
-    printf("Output states = %d\n", total);
+    printf("Output states = %d\n", output);
   }
 }
 
@@ -48,7 +47,7 @@ DAWG* buildDAWG(const int& fd) {
       current = fda->update(current, buf[i]);
     }
     total += bytes;
-    printf("Total bytes = %d\n", total);
+    printf("Bytes = %d\n", total);
   }
 
   return fda;
